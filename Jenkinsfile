@@ -61,7 +61,6 @@ pipeline {
               echo "4. Deploy and Install Application"
               cd ${WS}
               sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml -v
-              rm -f ./group_vars/all/vault
             '''
           }
         }
@@ -93,6 +92,7 @@ pipeline {
           echo "9. Tag for release ready"
           cd ${WS}
           sudo ansible-playbook release-tag.yml
+          sudo rm -f ./group_vars/all/vault
           echo "10. Release tagged!"
         '''
       }
