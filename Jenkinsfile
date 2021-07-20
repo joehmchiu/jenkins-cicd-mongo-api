@@ -98,7 +98,7 @@ pipeline {
         '''
       }
     }
-    stage('Ready for Release') {
+    stage('Post Tasks') {
       steps {
         sh '''#!/bin/bash
           echo "11. Clean up artifects"
