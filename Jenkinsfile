@@ -44,7 +44,7 @@ pipeline {
           echo "3. Post VM Deployment Validations"
           cd ${WS}
           sudo cp -p /opt/devops/mongo-api/vault ./group_vars/all/
-          sudo ansible-playbook -i hosts vm-validation.yml -v
+          sudo ansible-playbook -i hosts vm-validation.yml 
         '''
       }
     }
@@ -60,7 +60,7 @@ pipeline {
             sh '''#!/bin/bash
               echo "4. Deploy and Install Application"
               cd ${WS}
-              sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml -v
+              sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml 
             '''
           }
         }
