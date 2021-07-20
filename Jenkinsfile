@@ -13,14 +13,14 @@ pipeline {
         sh '''#!/bin/bash
           if [ -e ${WS} ]; then
             if [ -e "${WS}/main.tf" ]; then
-              cd ${WS}
+              sudo cd ${WS}
               echo "0. Destroy VM"
-              terraform init
-              terraform destroy -auto-approve
+              sudo terraform init
+              sudo terraform destroy -auto-approve
             fi
           else
             echo "0. Create Backup Workspace"
-            mkdir -p ${WS}
+            sudo mkdir -p ${WS}
           fi
         '''
       }
@@ -30,11 +30,11 @@ pipeline {
         sh '''#!/bin/bash
           echo "1. Deploy VM"
           echo "terraform init"
-          terraform init
+          sudo terraform init
           echo "terraform apply -auto-approve"
-          terraform apply -auto-approve
+          sudo terraform apply -auto-approve
           echo "2. Backup the deployment details"
-          cp -rf * ${WS}/.
+          sudo cp -rf * ${WS}/.
         '''
       }
     }
@@ -42,7 +42,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "3. Post VM Deployment Validations"
-          ansible-playbook -i hosts vm-validation.yml -v
+          sudo ansible-playbook -i hosts vm-validation.yml -v
         '''
       }
     }
@@ -57,8 +57,8 @@ pipeline {
           steps {
             sh '''#!/bin/bash
               echo "4. Deploy and Install Application"
-              cp -p /opt/devops/mongo-api/vault ./group_vars/all/
-              ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml -v
+              sudo cp -p /opt/devops/mongo-api/vault ./group_vars/all/
+              sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml -v
               rm -f ./group_vars/all/vault
             '''
           }
@@ -69,19 +69,19 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "5. Create test"
-          sh test/create.sh
+          sudo sh test/create.sh
           sleep 3
 
           echo "6. Read test"
-          sh test/read.sh
+          sudo sh test/read.sh
           sleep 3
 
           echo "7. Update test"
-          sh test/update.sh
+          sudo sh test/update.sh
           sleep 3
 
           echo "8. Delete test"
-          sh test/delete.sh
+          sudo sh test/delete.sh
         '''
       }
     }
@@ -89,9 +89,9 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "9. Tag for release ready"
-          cp -p /opt/devops/mongo-api/vault ./group_vars/all/
-          ansible-playbook release-tag.yml
-          rm -f ./group_vars/all/vault
+          sudo cp -p /opt/devops/mongo-api/vault ./group_vars/all/
+          sudo ansible-playbook release-tag.yml
+          sudo rm -f ./group_vars/all/vault
           echo "10. Done!"
         '''
       }
