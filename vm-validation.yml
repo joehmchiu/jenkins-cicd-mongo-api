@@ -1,0 +1,45 @@
+---
+- name: Collect system information
+  hosts: mongo
+  gather_facts: no
+  become: yes
+  vars:
+    log: /tmp/foobar.log
+    script: "{{ root }}/scripts/info-collector.pl"
+  tasks:
+    - name: Run script
+      ignore_errors: yes
+      script: "{{ script }}"
+      register: out
+
+- name: Collect the system information
+  hosts: local
+  gather_facts: no
+  vars: 
+    log: /tmp/adp-vm-info.log
+    json: /tmp/junit-adp-vm-info.json
+    script: "{{ root }}/scripts/info-json.pl"
+  tasks:
+    - name: Make fish JSON log
+      ignore_errors: yes
+      copy:
+        content: "{{ hostvars['aws']['out'].stdout_lines }}"
+        dest: "{{ log }}"
+
+    - name: Convert Log to JSON
+      ignore_errors: yes
+      shell: "perl {{ script }}"
+      register: out
+
+    - name: VM Validations
+      assert:
+        that: item['r'] is regex(item['k'])
+        # success_msg: "OK"
+        # fail_msg: "Not OK"
+        success_msg: "{{ item['n'] }} is OK - {{ item['k'] }} matched"
+        fail_msg: "{{ item['n'] }} is not OK - not matched {{ item['k'] }}"        
+        quiet: yes
+      loop_control:
+        label: "Validate {{ item['n'] }} if matched '{{ item['k'] }}'"
+      loop: "{{ out.stdout | from_json }}"
+

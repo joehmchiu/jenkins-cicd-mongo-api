@@ -1,0 +1,9 @@
+[Unit]
+Description=Mongo API Service
+After=network.target
+
+[Service]
+WorkingDirectory=/app
+Environment="PATH=/app"
+ExecStart=/app/api.py > /tmp/api-dump-$(date +'%F').log 2>&1
+

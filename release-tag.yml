@@ -1,0 +1,25 @@
+- name: Push git commits with local variables.
+  hosts: localhost
+  any_errors_fatal: true
+  vars:
+    branch: master
+  tasks:
+    - name: Set origin to include username and password.
+      shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/devops-cicd-mongo-api.git"
+
+    - name: display output
+      debug:
+        msg: "{{ tag_script }}"
+
+    - name: Generate new tag
+      script: "{{ tag_script }}"
+      register: out
+
+    - name: Set URL fact
+      set_fact:
+        tag: "{{ out.stdout }}"
+
+    - name: Set tag and push
+      shell: |
+        git tag -a {{ tag }} -m "release OK"
+        git push origin HEAD:master --follow-tags
