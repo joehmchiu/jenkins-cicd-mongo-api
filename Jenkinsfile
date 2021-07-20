@@ -93,7 +93,6 @@ pipeline {
           echo "9. Tag for release ready"
           cd ${WS}
           sudo ansible-playbook release-tag.yml
-          sudo rm -f ./group_vars/all/vault
           echo "10. Release tagged!"
         '''
       }
@@ -103,7 +102,6 @@ pipeline {
         sh '''#!/bin/bash
           echo "11. Clean up artifects"
           cd ${WS}
-          sudo rm -f ./group_vars/all/vault
           echo "Close the change request if opened"
           echo "12. Done!"
         '''
