@@ -1,6 +1,6 @@
 ansible_python_interpreter: /usr/bin/python3
 root: "{{ playbook_dir }}"
-tag_script:  "{{ root }}/scripts/git-tag.pl"
+tag_script:  "'{{ root }}'/scripts/git-tag.pl"
 user: "{{ mongo_user }}"
 token: "{{ mongo_token }}"
 username: "{{ git_user }}"
