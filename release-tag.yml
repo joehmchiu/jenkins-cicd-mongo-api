@@ -5,13 +5,13 @@
     branch: master
   tasks:
     - name: Set origin to include username and password.
-      shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/jenkins-cicd-mongo-api.git
+      shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/jenkins-cicd-mongo-api.git"
 
     - name: display output
       shell: chmod 755 {{ tag_script }}
 
     - name: Generate new tag
-      script: {{ tag_script }}
+      script: "{{ tag_script }}"
       register: out
 
     - name: Set URL fact
