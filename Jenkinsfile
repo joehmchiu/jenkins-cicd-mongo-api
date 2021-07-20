@@ -57,7 +57,7 @@ pipeline {
         }
         stage('API Deployment') {
           steps {
-            timeout(time: 5, unit: 'MINUTES') {
+            timeout(time: 2, unit: 'MINUTES') {
               sh '''#!/bin/bash
                 echo "4. Deploy and Install Application"
                 cd ${WS}
