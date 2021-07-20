@@ -8,7 +8,7 @@
       shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/jenkins-cicd-mongo-api.git
 
     - name: display output
-      command: chmod 755 "{{ tag_script }}"
+      shell: chmod 755 {{ tag_script }}
 
     - name: Generate new tag
       script: "{{ tag_script }}"
