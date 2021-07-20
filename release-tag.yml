@@ -11,7 +11,7 @@
       shell: chmod 755 {{ tag_script }}
 
     - name: Generate new tag
-      script: "{{ tag_script }}"
+      script: {{ tag_script }}
       register: out
 
     - name: Set URL fact
