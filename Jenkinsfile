@@ -47,7 +47,7 @@ pipeline {
           echo "3. Post VM Deployment Validations"
           cd ${WS}
           sudo cp -p /opt/devops/mongo-api/vault ./group_vars/all/
-          sudo ansible-playbook -i hosts vm-validation.yml 
+          sudo ansible-playbook -i hosts -T 300 vm-validation.yml 
         '''
       }
     }
@@ -64,7 +64,7 @@ pipeline {
               sh '''#!/bin/bash
                 echo "4. Deploy and Install Application"
                 cd ${WS}
-                sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml 
+                sudo ansible-playbook -i hosts -e "WS=${WS}" -T 300 mongo-api.yml 
                 sudo rm -f ./group_vars/all/vault
               '''
             }
@@ -97,7 +97,7 @@ pipeline {
         sh '''#!/bin/bash
           echo "9. Tag for release ready"
           sudo cp -p /opt/devops/mongo-api/vault ./group_vars/all/
-          sudo ansible-playbook release-tag.yml
+          sudo ansible-playbook -T 120 release-tag.yml
           sudo rm -f ./group_vars/all/vault
           echo "10. Release tagged!"
         '''
