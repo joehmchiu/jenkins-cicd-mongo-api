@@ -61,6 +61,7 @@ pipeline {
               echo "4. Deploy and Install Application"
               cd ${WS}
               sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml 
+              sudo rm -f ./group_vars/all/vault
             '''
           }
         }
@@ -90,6 +91,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "9. Tag for release ready"
+          sudo cp -p /opt/devops/mongo-api/vault ./group_vars/all/
           sudo ansible-playbook release-tag.yml
           sudo rm -f ./group_vars/all/vault
           echo "10. Release tagged!"
