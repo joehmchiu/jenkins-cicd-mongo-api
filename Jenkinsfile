@@ -90,7 +90,6 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "9. Tag for release ready"
-          cd ${WS}
           sudo ansible-playbook release-tag.yml
           sudo rm -f ./group_vars/all/vault
           echo "10. Release tagged!"
