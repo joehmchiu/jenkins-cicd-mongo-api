@@ -57,12 +57,14 @@ pipeline {
         }
         stage('API Deployment') {
           steps {
-            sh '''#!/bin/bash
-              echo "4. Deploy and Install Application"
-              cd ${WS}
-              sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml 
-              sudo rm -f ./group_vars/all/vault
-            '''
+            timeout(time: 5, unit: 'MINUTES') {
+              sh '''#!/bin/bash
+                echo "4. Deploy and Install Application"
+                cd ${WS}
+                sudo ansible-playbook -i hosts -e "WS=${WS}" mongo-api.yml 
+                sudo rm -f ./group_vars/all/vault
+              '''
+            }
           }
         }
       }
