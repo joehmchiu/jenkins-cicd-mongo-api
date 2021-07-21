@@ -25,4 +25,5 @@
     - name: Set tag and push
       shell: |
         git tag -a {{ tag }} -m "release OK"
+        git commit . -m "UAT release OK - tagged with {{ out.stdout }}"
         git push origin {{ branch }} --follow-tags
