@@ -2,7 +2,7 @@
   hosts: localhost
   any_errors_fatal: true
   vars:
-    branch: master
+    branch: uat
   tasks:
     - name: Set origin to include username and password.
       shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/jenkins-cicd-mongo-api.git"
@@ -21,4 +21,4 @@
     - name: Set tag and push
       shell: |
         git tag -a {{ tag }} -m "release OK"
-        git push origin HEAD:master --follow-tags
+        git push origin {{ branch }} --follow-tags
