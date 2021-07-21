@@ -14,6 +14,10 @@
       script: "{{ tag_script }}"
       register: out
 
+    - name: Tag renew
+      debug:
+          msg: "Tag branch {{ branch }} with {{ out.stdout }}"
+
     - name: Set URL fact
       set_fact:
         tag: "{{ out.stdout }}"
