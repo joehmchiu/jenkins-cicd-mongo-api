@@ -21,10 +21,12 @@
     - name: Set URL fact
       set_fact:
         tag: "{{ out.stdout }}"
+        note: "UAT release OK - tagged with {{ out.stdout }}"
 
     - name: Set tag and push
       shell: |
         git checkout {{ branch }}
+        cat "{{ msg }}" >> release-note
         git tag -a {{ tag }} -m "release OK"
-        git commit . -m "UAT release OK - tagged with {{ out.stdout }}"
+        git commit . -m "{{ msg }}"
         git push origin {{ branch }} --follow-tags
