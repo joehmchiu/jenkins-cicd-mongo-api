@@ -15,8 +15,8 @@ pipeline {
         sh '''#!/bin/bash
           if [ -e ${WS} ]; then
             if [ -e "${WS}/main.tf" ]; then
-              sudo cd ${WS}
               echo "0. Destroy VM in ${WS}"
+              sudo cd ${WS}
               sudo pwd
               sudo ls -lRthr
               sudo terraform init
