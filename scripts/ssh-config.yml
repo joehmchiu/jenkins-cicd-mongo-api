@@ -8,7 +8,7 @@
     sshkey: /etc/keys/ssh-key01.key
     sshname: aws
     user: ubuntu
-    pub_ip: 52.91.134.124
+    pub_ip: 18.209.237.197
 
   tasks:
   - name: Create SSH config file if not exists
