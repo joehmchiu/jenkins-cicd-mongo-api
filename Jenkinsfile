@@ -17,6 +17,7 @@ pipeline {
             if [ -e "${WS}/main.tf" ]; then
               sudo cd ${WS}
               echo "0. Destroy VM"
+              sudo pwd
               sudo ls -lRthr
               sudo terraform init
               sudo terraform destroy -auto-approve
