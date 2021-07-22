@@ -38,7 +38,7 @@ pipeline {
           echo "terraform apply -auto-approve"
           sudo terraform apply -auto-approve
           echo "2. Backup the deployment details"
-          sudo cp -rf * ${WS}/.
+          sudo cp -rf . ${WS}/.
         '''
       }
     }
