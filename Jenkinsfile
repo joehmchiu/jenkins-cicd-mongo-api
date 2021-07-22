@@ -1,7 +1,7 @@
 pipeline {
   environment {
     // create a backup workspace
-    BWS = '/opt/projects/mongo-api'
+    WS = '/opt/projects/mongo-api'
   }
 
   agent any
@@ -13,10 +13,10 @@ pipeline {
       steps {
         echo 'Raise a change request if any.'
         sh '''#!/bin/bash
-          if [ -e ${BWS} ]; then
-            if [ -e "${BWS}/main.tf" ]; then
-              echo "0. Destroy VM in ${BWS}"
-              sudo cd ${BWS}
+          if [ -e ${WS} ]; then
+            if [ -e "${WS}/main.tf" ]; then
+              echo "0. Destroy VM"
+              cd ${WS}
               sudo pwd
               sudo ls -lRthr
               sudo terraform init
@@ -24,7 +24,7 @@ pipeline {
             fi
           else
             echo "0. Create Backup Workspace"
-            sudo mkdir -p ${BWS}
+            sudo mkdir -p ${WS}
           fi
         '''
       }
@@ -38,7 +38,7 @@ pipeline {
           echo "terraform apply -auto-approve"
           sudo terraform apply -auto-approve
           echo "2. Backup the deployment details"
-          sudo cp -rf * ${BWS}/.
+          sudo cp -rf * ${WS}/.
         '''
       }
     }
@@ -63,7 +63,7 @@ pipeline {
             timeout(time: 5, unit: 'MINUTES') {
               sh '''#!/bin/bash
                 echo "4. Deploy and Install Application"
-                sudo ansible-playbook -i hosts -e "BWS=${BWS}" -T 300 mongo-api.yml 
+                sudo ansible-playbook -i hosts -e "WS=${WS}" -T 300 mongo-api.yml 
               '''
             }
           }
@@ -104,7 +104,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "11. Clean up artifects"
-          cd ${BWS}
+          cd ${WS}
           echo "Close the change request if opened"
           echo "12. Done!"
         '''
