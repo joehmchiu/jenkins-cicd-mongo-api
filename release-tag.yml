@@ -26,7 +26,8 @@
     - name: Set tag and push
       shell: |
         git checkout {{ branch }}
-        cat "{{ note }}" >> release-note
+        echo "{{ note }}" >> release-note
         git tag -a {{ tag }} -m "release OK"
         git commit . -m "{{ note }}"
         git push origin {{ branch }} --follow-tags
+        echo "Release Note Pushed: UAT release OK - tagged with {{ out.stdout }}"
