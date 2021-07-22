@@ -12,12 +12,12 @@ pipeline {
     stage('Pre Tasks') {
       steps {
         echo 'Raise a change request if any.'
-        sh "ls -lRthr '${WORKSPACE}'"
         sh '''#!/bin/bash
           if [ -e ${WS} ]; then
             if [ -e "${WS}/main.tf" ]; then
               sudo cd ${WS}
               echo "0. Destroy VM"
+              sudo ls -lRthr
               sudo terraform init
               sudo terraform destroy -auto-approve
             fi
