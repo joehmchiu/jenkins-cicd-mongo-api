@@ -29,6 +29,6 @@
         git checkout {{ branch }}
         # echo "{{ note }}" >> release-note
         git tag -a {{ tag }} -m "release OK"
-        git commit --amend -m "{{ note }}"
-        git push origin {{ branch }} --follow-tags -f
+        # git commit --amend -m "{{ note }}"
+        # git push origin {{ branch }} --follow-tags -f
         echo "Release Note Pushed: UAT release OK - tagged with {{ out.stdout }}"
