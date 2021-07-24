@@ -1,0 +1,34 @@
+- name: Push git commits with local variables.
+  hosts: localhost
+  any_errors_fatal: true
+  vars:
+    branch: uat
+    repo: jenkins-cicd-mongo-api.git
+  tasks:
+    - name: Set origin to include username and password.
+      shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/{{ repo }}"
+
+    - name: display output
+      shell: chmod 755 {{ tag_script }}
+
+    - name: Generate new tag
+      script: "{{ tag_script }}"
+      register: out
+
+    - name: Tag renew
+      debug:
+          msg: "Tag branch {{ branch }} with {{ out.stdout }}"
+
+    - name: Set URL fact
+      set_fact:
+        tag: "{{ out.stdout }}"
+        note: "UAT release OK - tagged with {{ out.stdout }}"
+
+    - name: Set tag and push
+      shell: |
+        # git checkout {{ branch }}
+        # echo "{{ note }}" >> release-note
+        git tag -a {{ tag }} -m "release OK"
+        git commit --amend -m "{{ note }}"
+        git push origin {{ branch }} --follow-tags -f
+        echo "Release Note Pushed: UAT release OK - tagged with {{ out.stdout }}"

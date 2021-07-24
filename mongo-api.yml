@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Output Mongo API to system
+    shell: |
+      cd "{{ WS }}"
+      terraform output mongo_api | sed 's/"//g' > /tmp/url
+
+- hosts: mongo
+  tasks:
+  - name: Dockerize Mongo API
+    shell: |
+      cd /tmp
+      DEBIAN_FRONTEND=noninteractive
+      sh docker-mongo.sh {{ user }} {{ token }}
+
+  - name: Clean up the artifects
+    shell: |
+      cd /tmp
+      rm -f Dockerfile docker* api* start*
+
