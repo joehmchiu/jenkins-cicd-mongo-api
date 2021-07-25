@@ -98,9 +98,12 @@ pipeline {
             echo "8. Delete test"
             sh test/delete.sh | tee ${tmpfile}
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-
           '''
         }
+      }
+    }
+    stage('Generate Report') {
+      steps {
         sh "pytest -v -p no:warnings test --junitxml=${crudxml}"
       }
     }
@@ -124,9 +127,12 @@ pipeline {
               sh test/delete.sh | tee ${tmpfile}
               echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
             done
-
           '''
         }
+      }
+    }
+    stage('Generate Report') {
+      steps {
         sh "pytest -v -p no:warnings test --junitxml=${loadxml}"
       }
     }
