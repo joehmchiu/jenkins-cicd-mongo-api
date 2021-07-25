@@ -122,7 +122,8 @@ pipeline {
               sh test/create.sh | tee ${tmpfile}
               echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               sh test/read.sh | tee ${tmpfile}
-              echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              # echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
               sh test/update.sh | tee ${tmpfile}
               # echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
