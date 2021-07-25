@@ -105,7 +105,7 @@ pipeline {
     stage('CRUD Test Report') {
       steps {
         catchError {
-          sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${crudxml}"
+          sh "pytest -v -p no:warnings test --junitxml=${crudxml}"
         }
       }
     }
@@ -118,7 +118,7 @@ pipeline {
             do
               echo -e ''$_{1..72}'\b-'
               echo "Test # $i"
-              echo -e ''$_{1..72}'\b-'
+              eho -e ''$_{1..72}'\b-'
               sh test/create.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
@@ -152,7 +152,7 @@ pipeline {
     stage('Load Test Report') {
       steps {
         catchError {
-          sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${loadxml}"
+          sh "pytest -v -p no:warnings test --junitxml=${loadxml}"
         }
       }
     }
