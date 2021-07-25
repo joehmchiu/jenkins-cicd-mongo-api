@@ -91,8 +91,8 @@ pipeline {
 
             echo "7. Update test"
             sh test/update.sh | tee ${tmpfile}
-            # echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-            echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
+            echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+            # echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
             sleep 1
 
             echo "8. Delete test"
@@ -100,15 +100,12 @@ pipeline {
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
           '''
         }
-      }
-    }
-    stage('CRUD Test Report') {
-      steps {
         catchError {
           sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${crudxml}"
         }
       }
     }
+
     stage('API Load Testing') {
       steps {
         catchError {
@@ -120,27 +117,39 @@ pipeline {
               echo "Test # $i"
               echo -e ''$_{1..72}'\b-'
               sh test/create.sh | tee ${tmpfile}
-              echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+                echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              else
+                echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
+              fi
               sh test/read.sh | tee ${tmpfile}
-              # echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-              echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+                echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              else
+                echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
+              fi
               sh test/update.sh | tee ${tmpfile}
-              # echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+                echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              else
+                echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
+              fi
               echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
               sh test/delete.sh | tee ${tmpfile}
-              echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+                echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              else
+                echo "{\\"Delete\\":\\"failed\\"}" >> ${testfile}
+              fi
             done
           '''
         }
-      }
-    }
-    stage('Load Test Report') {
-      steps {
         catchError {
           sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${loadxml}"
         }
       }
     }
+
     stage('Ready for Release') {
       steps {
         sh '''#!/bin/bash
