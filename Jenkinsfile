@@ -3,8 +3,8 @@ pipeline {
     // create a backup workspace
     WS = '/opt/projects/mongo-api'
     TC = 50
-    crudxml = "'${WORKSPACE}'/crud-test.xml"
-    loadxml = "'${WORKSPACE}'/load-test.xml"
+    crudxml = "crud-test.xml"
+    loadxml = "load-test.xml"
     tmpfile = '/tmp/test-tmp-file'
     testfile = '/tmp/test-results'
   }
@@ -97,7 +97,7 @@ pipeline {
           sh test/delete.sh | tee ${tmpfile}
           echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
 
-          pytest -v -p no:warnings test --junitxml="${crudxml}"
+          pytest -v -p no:warnings test --junitxml="'${WORKSPACE}'/reports/${crudxml}"
         '''
       }
     }
@@ -120,7 +120,7 @@ pipeline {
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
           done
 
-          pytest -v -p no:warnings test --junitxml="${loadxml}"
+          pytest -v -p no:warnings test --junitxml="'${WORKSPACE}'/reports/${loadxml}"
         '''
       }
     }
