@@ -3,8 +3,8 @@ pipeline {
     // create a backup workspace
     WS = '/opt/projects/mongo-api'
     TC = 50
-    crudxml = '/tmp/crud-test.xml'
-    loadxml = '/tmp/load-test.xml'
+    crudxml = "${WORKSPACE}/crud-test.xml"
+    loadxml = "${WORKSPACE}/load-test.xml"
     tmpfile = '/tmp/test-tmp-file'
     testfile = '/tmp/test-results'
   }
