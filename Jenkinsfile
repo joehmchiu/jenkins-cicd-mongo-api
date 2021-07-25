@@ -99,32 +99,34 @@ pipeline {
             sh test/delete.sh | tee ${tmpfile}
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
 
-            pytest -v -p no:warnings test --junitxml=${crudxml}
           '''
         }
+        sh "pytest -v -p no:warnings test --junitxml=${crudxml}"
       }
     }
     stage('API Load Testing') {
       steps {
-        sh '''#!/bin/bash
-          rm -f ${testfile}
-          for i in `seq 1 ${TC}`
-          do
-            echo -e ''$_{1..72}'\b-'
-            echo "Test # $i"
-            echo -e ''$_{1..72}'\b-'
-            sh test/create.sh | tee ${tmpfile}
-            echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-            sh test/read.sh | tee ${tmpfile}
-            echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-            sh test/update.sh | tee ${tmpfile}
-            echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-            sh test/delete.sh | tee ${tmpfile}
-            echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-          done
+        catchError {
+          sh '''#!/bin/bash
+            rm -f ${testfile}
+            for i in `seq 1 ${TC}`
+            do
+              echo -e ''$_{1..72}'\b-'
+              echo "Test # $i"
+              echo -e ''$_{1..72}'\b-'
+              sh test/create.sh | tee ${tmpfile}
+              echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              sh test/read.sh | tee ${tmpfile}
+              echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              sh test/update.sh | tee ${tmpfile}
+              echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              sh test/delete.sh | tee ${tmpfile}
+              echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+            done
 
-          pytest -v -p no:warnings test --junitxml=${loadxml}
-        '''
+          '''
+        }
+        sh "pytest -v -p no:warnings test --junitxml=${loadxml}"
       }
     }
     stage('Ready for Release') {
