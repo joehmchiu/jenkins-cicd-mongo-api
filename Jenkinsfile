@@ -77,7 +77,7 @@ pipeline {
     }
     stage('API CRUD Test') {
       steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        catchError {
           sh '''#!/bin/bash
             echo "5. Create test"
             sh test/create.sh | tee ${tmpfile}
