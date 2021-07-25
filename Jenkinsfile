@@ -75,7 +75,7 @@ pipeline {
         }
       }
     }
-    stage('CRUD Test') {
+    stage('API CRUD Test') {
       steps {
         sh '''#!/bin/bash
           echo "5. Create test"
@@ -101,7 +101,7 @@ pipeline {
         '''
       }
     }
-    stage('Load Testing') {
+    stage('API Load Testing') {
       steps {
         sh '''#!/bin/bash
           rm -f ${testfile}
