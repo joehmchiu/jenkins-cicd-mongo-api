@@ -100,12 +100,15 @@ pipeline {
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
           '''
         }
+      }
+    }
+    stage('CRUD Test Report') {
+      steps {
         catchError {
           sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${crudxml}"
         }
       }
     }
-
     stage('API Load Testing') {
       steps {
         catchError {
@@ -116,21 +119,18 @@ pipeline {
               echo -e ''$_{1..72}'\b-'
               echo "Test # $i"
               echo -e ''$_{1..72}'\b-'
-
               sh test/create.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
                 echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
               fi
-
               sh test/read.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
                 echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
               fi
-
               sh test/update.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
@@ -138,7 +138,6 @@ pipeline {
                 echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
               fi
               echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
-
               sh test/delete.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
@@ -148,12 +147,15 @@ pipeline {
             done
           '''
         }
+      }
+    }
+    stage('Load Test Report') {
+      steps {
         catchError {
           sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${loadxml}"
         }
       }
     }
-
     stage('Ready for Release') {
       steps {
         sh '''#!/bin/bash
