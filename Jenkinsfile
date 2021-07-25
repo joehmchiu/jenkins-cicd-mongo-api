@@ -104,7 +104,9 @@ pipeline {
     }
     stage('CRUD Test Report') {
       steps {
-        sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${crudxml}"
+        catchError {
+          sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${crudxml}"
+        }
       }
     }
     stage('API Load Testing') {
@@ -133,7 +135,9 @@ pipeline {
     }
     stage('Load Test Report') {
       steps {
-        sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${loadxml}"
+        catchError {
+          sh "pytest -v --suppress-tests-failed-exit-code -p no:warnings test --junitxml=${loadxml}"
+        }
       }
     }
     stage('Ready for Release') {
