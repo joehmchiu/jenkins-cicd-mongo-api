@@ -5,6 +5,7 @@
     branch: uat
     repo: jenkins-cicd-mongo-api.git
     notefile: release-note
+    reportdir: "{{ root }}/reports"
   tasks:
     - name: Set origin to include username and password.
       shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/{{ repo }}"
@@ -32,6 +33,7 @@
         git tag -a {{ tag }} -m "ready for release"
         echo "{{ note }}" >> {{ notefile }}
         git add {{ notefile }}
+        git add "{{ reportdir }}/."
         git commit -m "{{ note }}"
         git push origin {{ branch }} --follow-tags -f
         echo "Release Note Pushed: UAT release OK - tagged with {{ out.stdout }}"

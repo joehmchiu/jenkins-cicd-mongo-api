@@ -97,7 +97,7 @@ pipeline {
           sh test/delete.sh | tee ${tmpfile}
           echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
 
-          pytest -v -p no:warnings test --junitxml=${crudxml}
+          pytest -v -p no:warnings test --junitxml="${crudxml}"
         '''
       }
     }
@@ -120,7 +120,7 @@ pipeline {
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
           done
 
-          pytest -v -p no:warnings test --junitxml=${loadxml}
+          pytest -v -p no:warnings test --junitxml="${loadxml}"
         '''
       }
     }
