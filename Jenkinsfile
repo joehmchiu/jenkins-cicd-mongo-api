@@ -102,7 +102,7 @@ pipeline {
         }
       }
     }
-    stage('Generate Report') {
+    stage('CRUD Test Report') {
       steps {
         sh "pytest -v -p no:warnings test --junitxml=${crudxml}"
       }
@@ -131,7 +131,7 @@ pipeline {
         }
       }
     }
-    stage('Generate Report') {
+    stage('Load Test Report') {
       steps {
         sh "pytest -v -p no:warnings test --junitxml=${loadxml}"
       }
