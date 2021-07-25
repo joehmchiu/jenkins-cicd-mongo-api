@@ -77,28 +77,31 @@ pipeline {
     }
     stage('API CRUD Test') {
       steps {
-        sh '''#!/bin/bash
-          echo "5. Create test"
-          sh test/create.sh | tee ${tmpfile}
-          echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" > ${testfile}
-          sleep 1
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          sh '''#!/bin/bash
+            echo "5. Create test"
+            sh test/create.sh | tee ${tmpfile}
+            echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" > ${testfile}
+            sleep 1
 
-          echo "6. Read test"
-          sh test/read.sh | tee ${tmpfile}
-          echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-          sleep 1
+            echo "6. Read test"
+            sh test/read.sh | tee ${tmpfile}
+            echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+            sleep 1
 
-          echo "7. Update test"
-          sh test/update.sh | tee ${tmpfile}
-          echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-          sleep 1
+            echo "7. Update test"
+            sh test/update.sh | tee ${tmpfile}
+            # echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+            echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
+            sleep 1
 
-          echo "8. Delete test"
-          sh test/delete.sh | tee ${tmpfile}
-          echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+            echo "8. Delete test"
+            sh test/delete.sh | tee ${tmpfile}
+            echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
 
-          pytest -v -p no:warnings test --junitxml=${crudxml}
-        '''
+            pytest -v -p no:warnings test --junitxml=${crudxml}
+          '''
+        }
       }
     }
     stage('API Load Testing') {
