@@ -2,14 +2,11 @@ pipeline {
   environment {
     // create a backup workspace
     WS = '/opt/projects/mongo-api'
-<<<<<<< HEAD
     TC = 50
     crudxml = '/tmp/crud-test.xml'
     loadxml = '/tmp/load-test.xml'
     tmpfile = '/tmp/test-tmp-file'
     testfile = '/tmp/test-results'
-=======
->>>>>>> 66b7bf567780e9210759da07a12c705dda58491e
   }
 
   agent any
@@ -82,7 +79,6 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "5. Create test"
-<<<<<<< HEAD
           sh test/create.sh | tee ${tmpfile}
           echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" > ${testfile}
           sleep 1
@@ -125,21 +121,6 @@ pipeline {
           done
 
           pytest -v -p no:warnings test --junitxml=${loadxml}
-=======
-          sudo sh test/create.sh
-          sleep 3
-
-          echo "6. Read test"
-          sudo sh test/read.sh
-          sleep 3
-
-          echo "7. Update test"
-          sudo sh test/update.sh
-          sleep 3
-
-          echo "8. Delete test"
-          sudo sh test/delete.sh
->>>>>>> 66b7bf567780e9210759da07a12c705dda58491e
         '''
       }
     }
@@ -147,11 +128,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "9. Tag for release ready"
-<<<<<<< HEAD
-          sudo ansible-playbook -T 120 uat-release.yml -vvv
-=======
           sudo ansible-playbook -T 120 uat-release.yml
->>>>>>> 66b7bf567780e9210759da07a12c705dda58491e
           sudo rm -f ./group_vars/all/vault
           echo "10. Release tagged!"
         '''

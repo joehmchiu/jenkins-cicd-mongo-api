@@ -3,17 +3,11 @@
   any_errors_fatal: true
   vars:
     branch: uat
-<<<<<<< HEAD
     repo: jenkins-cicd-mongo-api.git
     notefile: release-note
   tasks:
     - name: Set origin to include username and password.
       shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/{{ repo }}"
-=======
-  tasks:
-    - name: Set origin to include username and password.
-      shell: "git remote set-url origin https://{{ username }}:{{ password }}@github.com/{{ username }}/jenkins-cicd-mongo-api.git"
->>>>>>> 66b7bf567780e9210759da07a12c705dda58491e
 
     - name: display output
       shell: chmod 755 {{ tag_script }}
@@ -34,7 +28,6 @@
     - name: Set tag and push
       shell: |
         git checkout {{ branch }}
-<<<<<<< HEAD
         git pull origin {{ branch }}
         git tag -a {{ tag }} -m "ready for release"
         echo "{{ note }}" >> {{ notefile }}
@@ -43,10 +36,3 @@
         git push origin {{ branch }} --follow-tags -f
         echo "Release Note Pushed: UAT release OK - tagged with {{ out.stdout }}"
         
-=======
-        echo "{{ note }}" >> release-note
-        git tag -a {{ tag }} -m "release OK"
-        git commit . -m "{{ note }}"
-        git push origin {{ branch }} --follow-tags
-        echo "Release Note Pushed: UAT release OK - tagged with {{ out.stdout }}"
->>>>>>> 66b7bf567780e9210759da07a12c705dda58491e
