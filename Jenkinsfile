@@ -119,7 +119,8 @@ pipeline {
               sh test/read.sh | tee ${tmpfile}
               echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               sh test/update.sh | tee ${tmpfile}
-              echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              # echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
               sh test/delete.sh | tee ${tmpfile}
               echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
             done
