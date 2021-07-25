@@ -123,7 +123,7 @@ pipeline {
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
-                echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
+                echo "{\\"Create\\":\\"skip\\"}" >> ${testfile}
               fi
               sh test/read.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
@@ -137,12 +137,11 @@ pipeline {
               else
                 echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
               fi
-              echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
               sh test/delete.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
-                echo "{\\"Delete\\":\\"failed\\"}" >> ${testfile}
+                echo "{\\"Delete\\":\\"skip\\"}" >> ${testfile}
               fi
             done
           '''
