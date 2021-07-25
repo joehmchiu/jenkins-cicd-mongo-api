@@ -3,8 +3,8 @@ pipeline {
     // create a backup workspace
     WS = '/opt/projects/mongo-api'
     TC = 50
-    crudxml = "${WORKSPACE}/crud-test.xml"
-    loadxml = "${WORKSPACE}/load-test.xml"
+    crudxml = "'${WORKSPACE}'/crud-test.xml"
+    loadxml = "'${WORKSPACE}'/load-test.xml"
     tmpfile = '/tmp/test-tmp-file'
     testfile = '/tmp/test-results'
   }
@@ -141,7 +141,6 @@ pipeline {
           cd ${WS}
           echo "Close the change request if opened"
           echo "12. Done!"
-          sh "cp -f /tmp/*.xml '$WORKSPACE'/reports/."
         '''
       }
     }
