@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite errors="0" failures="1" hostname="9002fd428f35" name="pytest" skipped="0" tests="4" time="0.295" timestamp="2021-07-25T07:45:28.230340"><testcase classname="test.test_crud" name="test_equal[Create-ok]" time="0.005" /><testcase classname="test.test_crud" name="test_equal[Read-ok]" time="0.005" /><testcase classname="test.test_crud" name="test_equal[Update-failed]" time="0.010"><failure message="AssertionError: assert 'failed' == 'ok'&#10;  - ok&#10;  + failed">key = 'Update', val = 'failed'
-
-    @pytest.mark.parametrize(
-        "key,val",
-        arr,
-    )
-    def test_equal(key, val):
-&gt;       assert val == 'ok'
-E       AssertionError: assert 'failed' == 'ok'
-E         - ok
-E         + failed
-
-test/test_crud.py:21: AssertionError</failure></testcase><testcase classname="test.test_crud" name="test_equal[Delete-ok]" time="0.004" /></testsuite></testsuites>
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite errors="0" failures="0" hostname="9002fd428f35" name="pytest" skipped="0" tests="4" time="0.310" timestamp="2021-07-25T11:22:01.943526"><testcase classname="test.test_crud" name="test_equal[Create-ok]" time="0.007" /><testcase classname="test.test_crud" name="test_equal[Read-ok]" time="0.003" /><testcase classname="test.test_crud" name="test_equal[Update-ok]" time="0.004" /><testcase classname="test.test_crud" name="test_equal[Delete-ok]" time="0.005" /></testsuite></testsuites>
