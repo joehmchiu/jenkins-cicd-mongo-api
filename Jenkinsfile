@@ -141,7 +141,7 @@ pipeline {
           cd ${WS}
           echo "Close the change request if opened"
           echo "12. Done!"
-          sh "cp /tmp/*.xml '$WORKSPACE'/reports/."
+          sh "cp -f /tmp/*.xml '$WORKSPACE'/reports/."
         '''
       }
     }
