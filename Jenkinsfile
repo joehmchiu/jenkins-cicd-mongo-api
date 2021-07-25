@@ -92,7 +92,7 @@ pipeline {
             echo "7. Update test"
             sh test/update.sh | tee ${tmpfile}
             echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-            # echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
+            # echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
             sleep 1
 
             echo "8. Delete test"
@@ -129,13 +129,13 @@ pipeline {
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
-                echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
+                echo "{\\"Read\\":\\"skip\\"}" >> ${testfile}
               fi
               sh test/update.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
                 echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
-                echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
+                echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
               fi
               sh test/delete.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
