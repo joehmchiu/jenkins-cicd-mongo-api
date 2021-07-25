@@ -141,8 +141,14 @@ pipeline {
           cd ${WS}
           echo "Close the change request if opened"
           echo "12. Done!"
+          sh "cp /tmp/*.xml '$WORKSPACE'/reports/."
         '''
       }
+    }
+  }
+  post {
+    always {
+      junit allowEmptyResults: true, testResults: '**/reports/*.xml'
     }
   }
 }
