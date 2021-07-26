@@ -119,30 +119,36 @@ pipeline {
               echo -e ''$_{1..72}'\b-'
               echo "Test # $i"
               eho -e ''$_{1..72}'\b-'
+              SNO=7
+
               sh test/create.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
                 echo "{\\"Create\\":\\"skip\\"}" >> ${testfile}
               fi
+
               sh test/read.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
                 echo "{\\"Read\\":\\"skip\\"}" >> ${testfile}
               fi
+
               sh test/update.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
                 echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
               fi
+
               sh test/delete.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 5 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
               else
                 echo "{\\"Delete\\":\\"skip\\"}" >> ${testfile}
               fi
+
             done
           '''
         }
