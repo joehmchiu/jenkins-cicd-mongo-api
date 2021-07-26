@@ -120,9 +120,10 @@ pipeline {
               echo "Test # $i"
               eho -e ''$_{1..72}'\b-'
               SNO=5
+              FNO=1
 
               sh test/create.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 2 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
                 echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
               elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
@@ -131,7 +132,7 @@ pipeline {
               fi
 
               sh test/read.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 2 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
                 echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
               elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
@@ -140,7 +141,7 @@ pipeline {
               fi
 
               sh test/update.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 2 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
                 echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
               elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
@@ -149,7 +150,7 @@ pipeline {
               fi
 
               sh test/delete.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt 2 ]; then
+              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
                 echo "{\\"Delete\\":\\"failed\\"}" >> ${testfile}
               elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
                 echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
