@@ -120,7 +120,7 @@ pipeline {
               echo "Test # $i"
               eho -e ''$_{1..72}'\b-'
               SNO=5
-              FNO=2
+              FNO=1
 
               sh test/create.sh | tee ${tmpfile}
               if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
