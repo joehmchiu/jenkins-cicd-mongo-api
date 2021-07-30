@@ -177,9 +177,9 @@ pipeline {
   post {
     always {
       junit allowEmptyResults: true, testResults: '**/reports/*.xml'
+      echo "${ok} Destroy VM"
       sh '''#!/bin/bash
         if [ -e "${WS}/main.tf" ]; then
-          echo "${ok} Destroy VM"
           cd ${WS}
           sudo pwd
           sudo ls -lRthr
@@ -189,8 +189,8 @@ pipeline {
       '''
     }
     success {
+      echo "${ok} Tag for release ready"
       sh '''#!/bin/bash
-        echo "${ok} Tag for release ready"
         sudo ansible-playbook -T 120 uat-release.yml
         sudo rm -f ./group_vars/all/vault
         echo "10. Release tagged!"
