@@ -7,6 +7,8 @@ pipeline {
     loadxml = "reports/load-test.xml"
     tmpfile = '/tmp/test-tmp-file'
     testfile = '/tmp/test-results'
+    ok = '\u2705'
+    nok = '\u274C'
   }
 
   agent any
@@ -161,17 +163,7 @@ pipeline {
         }
       }
     }
-    stage('Ready for Release') {
-      steps {
-        sh '''#!/bin/bash
-          echo "9. Tag for release ready"
-          sudo ansible-playbook -T 120 uat-release.yml
-          sudo rm -f ./group_vars/all/vault
-          echo "10. Release tagged!"
-        '''
-      }
-    }
-    stage('Post Tasks') {
+    stage('Clean Up') {
       steps {
         sh '''#!/bin/bash
           echo "11. Clean up artifects"
@@ -187,7 +179,7 @@ pipeline {
       junit allowEmptyResults: true, testResults: '**/reports/*.xml'
       sh '''#!/bin/bash
         if [ -e "${WS}/main.tf" ]; then
-          echo "-- Destroy VM"
+          echo "${ok} Destroy VM"
           cd ${WS}
           sudo pwd
           sudo ls -lRthr
@@ -195,6 +187,23 @@ pipeline {
           sudo terraform destroy -auto-approve
         fi
       '''
+    }
+    success {
+      sh '''#!/bin/bash
+        echo "${ok} Tag for release ready"
+        sudo ansible-playbook -T 120 uat-release.yml
+        sudo rm -f ./group_vars/all/vault
+        echo "10. Release tagged!"
+      '''
+    }
+    unstable {
+        echo '${ok} ${nok} Unstable status occurs...'
+    }
+    failure {
+        echo '${nok} Failures found'
+    }
+    changed {
+        echo '${ok} Things were different before...'
     }
   }
 }
