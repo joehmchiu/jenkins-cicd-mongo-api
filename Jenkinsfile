@@ -18,16 +18,7 @@ pipeline {
       steps {
         echo 'Raise a change request if any.'
         sh '''#!/bin/bash
-          if [ -e ${WS} ]; then
-            if [ -e "${WS}/main.tf" ]; then
-              echo "0. Destroy VM"
-              cd ${WS}
-              sudo pwd
-              sudo ls -lRthr
-              sudo terraform init
-              sudo terraform destroy -auto-approve
-            fi
-          else
+          if [ ! -e ${WS} ]; then
             echo "0. Create Backup Workspace"
             sudo mkdir -p ${WS}
           fi
@@ -194,6 +185,16 @@ pipeline {
   post {
     always {
       junit allowEmptyResults: true, testResults: '**/reports/*.xml'
+      sh '''#!/bin/bash
+        if [ -e "${WS}/main.tf" ]; then
+          echo "-- Destroy VM"
+          cd ${WS}
+          sudo pwd
+          sudo ls -lRthr
+          sudo terraform init
+          sudo terraform destroy -auto-approve
+        fi
+      '''
     }
   }
 }
