@@ -197,13 +197,13 @@ pipeline {
       '''
     }
     unstable {
-        echo '${ok} ${nok} Unstable status occurs...'
+        echo "${ok} ${nok} Unstable status occurs..."
     }
     failure {
-        echo '${nok} Failures found'
+        echo "${nok} Failures found"
     }
     changed {
-        echo '${ok} Things were different before...'
+        echo "${ok} Things were different before..."
     }
   }
 }
