@@ -185,11 +185,13 @@ pipeline {
           sudo terraform destroy -auto-approve
         fi
       '''
-      try {
-        junit allowEmptyResults: true, testResults: '**/reports/*.xml'
-        echo "${ok} Junit Results"
-      } catch (Exception e) {
-        echo "${nok} Cannot generate results - " + e.toString()
+      script {
+        try {
+          junit allowEmptyResults: true, testResults: '**/reports/*.xml'
+          echo "${ok} Junit Results"
+        } catch (Exception e) {
+          echo "${nok} Cannot generate results - " + e.toString()
+        }
       }
     }
     success {
