@@ -71,28 +71,32 @@ pipeline {
     }
     stage('API CRUD Test') {
       steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          sh '''#!/bin/bash
-            echo "5. Create test"
-            sh test/create.sh | tee ${tmpfile}
-            echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" > ${testfile}
-            sleep 1
+        script {
+          try {
+            sh '''#!/bin/bash
+              echo "5. Create test"
+              sh test/create.sh | tee ${tmpfile}
+              echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" > ${testfile}
+              sleep 1
 
-            echo "6. Read test"
-            sh test/read.sh | tee ${tmpfile}
-            echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-            sleep 1
+              echo "6. Read test"
+              sh test/read.sh | tee ${tmpfile}
+              echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              sleep 1
 
-            echo "7. Update test"
-            sh test/update.sh | tee ${tmpfile}
-            echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-            # echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
-            sleep 1
+              echo "7. Update test"
+              sh test/update.sh | tee ${tmpfile}
+              echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+              # echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
+              sleep 1
 
-            echo "8. Delete test"
-            sh test/delete.sh | tee ${tmpfile}
-            echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-          '''
+              echo "8. Delete test"
+              sh test/delete.sh | tee ${tmpfile}
+              echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+            '''
+          } catch (Exception e) {
+            echo "${ok} Validation failure found, it's OK"
+          }
         }
       }
     }
@@ -105,55 +109,59 @@ pipeline {
     }
     stage('API Load Testing') {
       steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-          sh '''#!/bin/bash
-            rm -f ${testfile}
-            for i in `seq 1 ${TC}`
-            do
-              echo -e ''$_{1..72}'\b-'
-              echo "Test # $i"
-              eho -e ''$_{1..72}'\b-'
-              SNO=5
-              FNO=2
+        script {
+          try {
+            sh '''#!/bin/bash
+              rm -f ${testfile}
+              for i in `seq 1 ${TC}`
+              do
+                echo -e ''$_{1..72}'\b-'
+                echo "Test # $i"
+                eho -e ''$_{1..72}'\b-'
+                SNO=5
+                FNO=2
 
-              sh test/create.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
-                echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
-              elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
-                echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-              else
-                echo "{\\"Create\\":\\"skip\\"}" >> ${testfile}
-              fi
+                sh test/create.sh | tee ${tmpfile}
+                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                  echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
+                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                  echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+                else
+                  echo "{\\"Create\\":\\"skip\\"}" >> ${testfile}
+                fi
 
-              sh test/read.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
-                echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
-              elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
-                echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-              else
-                echo "{\\"Read\\":\\"skip\\"}" >> ${testfile}
-              fi
+                sh test/read.sh | tee ${tmpfile}
+                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                  echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
+                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                  echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+                else
+                  echo "{\\"Read\\":\\"skip\\"}" >> ${testfile}
+                fi
 
-              sh test/update.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
-                echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
-              elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
-                echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-              else
-                echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
-              fi
+                sh test/update.sh | tee ${tmpfile}
+                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                  echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
+                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                  echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+                else
+                  echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
+                fi
 
-              sh test/delete.sh | tee ${tmpfile}
-              if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
-                echo "{\\"Delete\\":\\"failed\\"}" >> ${testfile}
-              elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
-                echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-              else
-                echo "{\\"Delete\\":\\"skip\\"}" >> ${testfile}
-              fi
+                sh test/delete.sh | tee ${tmpfile}
+                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                  echo "{\\"Delete\\":\\"failed\\"}" >> ${testfile}
+                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                  echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+                else
+                  echo "{\\"Delete\\":\\"skip\\"}" >> ${testfile}
+                fi
 
-            done
-          '''
+              done
+            '''
+          } catch (Exception e) {
+            echo "${ok} Validation failure found, it's OK"
+          }
         }
       }
     }
