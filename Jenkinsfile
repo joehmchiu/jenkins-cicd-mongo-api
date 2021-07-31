@@ -177,6 +177,7 @@ pipeline {
         sh '''#!/bin/bash
           echo "11. Clean up artifects"
           cd ${WS}
+          echo "${ok} 12. Done!"
         '''
       }
     }
@@ -194,7 +195,16 @@ pipeline {
         echo "10. Release tagged!"
       '''
       echo "${ok} Close the change request if opened"
-      echo "${ok} 12. Done!"
+      echo "${nok} Destroy VM, test only"
+      sh '''#!/bin/bash
+        if [ -e "${WS}/main.tf" ]; then
+          cd ${WS}
+          sudo pwd
+          sudo ls -lRthr
+          sudo terraform init
+          sudo terraform destroy -auto-approve
+        fi
+      '''
     }
     unstable {
         echo "${ok} ${nok} Unstable status occurs..."
