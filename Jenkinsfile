@@ -119,7 +119,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
                 eho -e ''$_{1..72}'\b-'
-                SNO=4
+                SNO=1
                 FNO=0
 
                 sh test/create.sh | tee ${tmpfile}
@@ -197,7 +197,7 @@ pipeline {
         echo "10. Release tagged!"
       '''
       echo "${ok} Close the change request if opened"
-      echo "${nok} Destroy VM, test only"
+      echo "${ok} Destroy VM, test only"
       sh '''#!/bin/bash
         if [ -e "${WS}/main.tf" ]; then
           cd ${WS}
