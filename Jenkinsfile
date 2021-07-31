@@ -185,7 +185,8 @@ pipeline {
   post {
     always {
       echo "${ok} Junit Results"
-      junit allowEmptyResults: true, testResults: '**/reports/*.xml'
+      cd '${WORKSPACE}'
+      junit allowEmptyResults: true, testResults: 'reports/*.xml'
     }
     success {
       echo "${ok} Tag for release ready"
