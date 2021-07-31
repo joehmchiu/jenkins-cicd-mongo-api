@@ -71,7 +71,7 @@ pipeline {
     }
     stage('API CRUD Test') {
       steps {
-        catchError {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           sh '''#!/bin/bash
             echo "5. Create test"
             sh test/create.sh | tee ${tmpfile}
@@ -93,7 +93,6 @@ pipeline {
             sh test/delete.sh | tee ${tmpfile}
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
           '''
-          currentBuild.result = 'SUCCESS'
         }
       }
     }
@@ -106,7 +105,7 @@ pipeline {
     }
     stage('API Load Testing') {
       steps {
-        catchError {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           sh '''#!/bin/bash
             rm -f ${testfile}
             for i in `seq 1 ${TC}`
@@ -155,7 +154,6 @@ pipeline {
 
             done
           '''
-          currentBuild.result = 'SUCCESS'
         }
       }
     }
