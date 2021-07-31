@@ -44,6 +44,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
           echo "3. Post VM Deployment Validations"
+          cd '${WORKSPACE}'
           sudo cp -p /opt/devops/mongo-api/vault ./group_vars/all/
           sudo ansible-playbook -i hosts -T 300 vm-validation.yml 
         '''

@@ -5,7 +5,7 @@
   become: yes
   vars:
     log: /tmp/foobar.log
-    script: "'{{ root }}'/scripts/info-collector.pl"
+    script: "scripts/info-collector.pl"
   tasks:
     - name: Run script
       ignore_errors: yes
