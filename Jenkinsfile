@@ -103,7 +103,6 @@ pipeline {
     stage('CRUD Test Report') {
       steps {
         catchError {
-          cd '${WORKSPACE}'
           sh "pytest -v -p no:warnings test --junitxml=${crudxml}"
         }
       }
@@ -119,7 +118,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
                 eho -e ''$_{1..72}'\b-'
-                SNO=1
+                SNO=5
                 FNO=0
 
                 sh test/create.sh | tee ${tmpfile}
@@ -169,7 +168,6 @@ pipeline {
     stage('Load Test Report') {
       steps {
         catchError {
-          cd '${WORKSPACE}'
           sh "pytest -v -p no:warnings test --junitxml=${loadxml}"
         }
       }
