@@ -195,17 +195,19 @@ pipeline {
     always {
       echo "${ok} Junit Results"
       junit allowEmptyResults: true, testResults: '**/reports/*.xml'
-      if ("${params.YN}" == "Yes") {
-        echo "${ok} Destroy VM, test only"
-        sh '''#!/bin/bash
-          if [ -e "${WS}/main.tf" ]; then
-            cd ${WS}
-            sudo pwd
-            sudo ls -lRthr
-            sudo terraform init
-            sudo terraform destroy -auto-approve
-          fi
-        '''
+      script {
+        if ("${params.YN}" == "Yes") {
+          echo "${ok} Destroy VM, test only"
+          sh '''#!/bin/bash
+            if [ -e "${WS}/main.tf" ]; then
+              cd ${WS}
+              sudo pwd
+              sudo ls -lRthr
+              sudo terraform init
+              sudo terraform destroy -auto-approve
+            fi
+          '''
+        }
       }
     }
     success {
