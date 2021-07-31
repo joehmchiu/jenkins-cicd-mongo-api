@@ -126,7 +126,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
                 eho -e ''$_{1..72}'\b-'
-                SNO=10
+                SNO=5
                 FNO=0
 
                 sh test/create.sh | tee ${tmpfile}
@@ -193,7 +193,7 @@ pipeline {
   post {
     always {
       echo "${ok} Junit Results"
-      junit allowEmptyResults: true, testResults: '**/reports/*.xml'
+      junit allowEmptyResults: true, testResults: '**/reports/*.xml', skipPublishingChecks: true
       script {
         if ("${params.YN}" == "Yes") {
           echo "${ok} Destroy VM, test only"
