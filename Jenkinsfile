@@ -103,6 +103,7 @@ pipeline {
     stage('CRUD Test Report') {
       steps {
         catchError {
+          cd '${WORKSPACE}'
           sh "pytest -v -p no:warnings test --junitxml=${crudxml}"
         }
       }
@@ -168,6 +169,7 @@ pipeline {
     stage('Load Test Report') {
       steps {
         catchError {
+          cd '${WORKSPACE}'
           sh "pytest -v -p no:warnings test --junitxml=${loadxml}"
         }
       }
@@ -185,8 +187,7 @@ pipeline {
   post {
     always {
       echo "${ok} Junit Results"
-      cd '${WORKSPACE}'
-      junit allowEmptyResults: true, testResults: 'reports/*.xml'
+      junit allowEmptyResults: true, testResults: '**/reports/*.xml'
     }
     success {
       echo "${ok} Tag for release ready"
