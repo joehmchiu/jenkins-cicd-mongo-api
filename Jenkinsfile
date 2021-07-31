@@ -15,6 +15,15 @@ pipeline {
   options {
       timeout(time: 1, unit: 'HOURS') 
   }
+
+  parameters {
+    choice(
+        name: 'YN',
+        choices:"Yes\nNo",
+        defaultValue:"Yes",
+        description: "Destroy the VM? ")
+  }
+
   stages {
     stage('Pre Tasks') {
       steps {
@@ -186,6 +195,18 @@ pipeline {
     always {
       echo "${ok} Junit Results"
       junit allowEmptyResults: true, testResults: '**/reports/*.xml'
+      if ("${params.YN}" == "Yes") {
+        echo "${ok} Destroy VM, test only"
+        sh '''#!/bin/bash
+          if [ -e "${WS}/main.tf" ]; then
+            cd ${WS}
+            sudo pwd
+            sudo ls -lRthr
+            sudo terraform init
+            sudo terraform destroy -auto-approve
+          fi
+        '''
+      }
     }
     success {
       echo "${ok} Tag for release ready"
@@ -195,32 +216,12 @@ pipeline {
         echo "10. Release tagged!"
       '''
       echo "${ok} Close the change request if opened"
-      echo "${ok} Destroy VM, test only"
-      sh '''#!/bin/bash
-        if [ -e "${WS}/main.tf" ]; then
-          cd ${WS}
-          sudo pwd
-          sudo ls -lRthr
-          sudo terraform init
-          sudo terraform destroy -auto-approve
-        fi
-      '''
     }
     unstable {
         echo "${ok} ${nok} Unstable status occurs..."
     }
     failure {
       echo "${nok} Failures found"
-      echo "${nok} Destroy VM"
-      sh '''#!/bin/bash
-        if [ -e "${WS}/main.tf" ]; then
-          cd ${WS}
-          sudo pwd
-          sudo ls -lRthr
-          sudo terraform init
-          sudo terraform destroy -auto-approve
-        fi
-      '''
     }
     changed {
         echo "${ok} Things were different before..."
