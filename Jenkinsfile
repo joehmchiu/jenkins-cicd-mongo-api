@@ -183,16 +183,6 @@ pipeline {
           echo "${nok} Cannot generate results - " + e.toString()
         }
       }
-      echo "${ok} Destroy VM"
-      sh '''#!/bin/bash
-        if [ -e "${WS}/main.tf" ]; then
-          cd ${WS}
-          sudo pwd
-          sudo ls -lRthr
-          sudo terraform init
-          sudo terraform destroy -auto-approve
-        fi
-      '''
     }
     success {
       echo "${ok} Tag for release ready"
@@ -208,7 +198,17 @@ pipeline {
         echo "${ok} ${nok} Unstable status occurs..."
     }
     failure {
-        echo "${nok} Failures found"
+      echo "${nok} Failures found"
+      echo "${nok} Destroy VM"
+      sh '''#!/bin/bash
+        if [ -e "${WS}/main.tf" ]; then
+          cd ${WS}
+          sudo pwd
+          sudo ls -lRthr
+          sudo terraform init
+          sudo terraform destroy -auto-approve
+        fi
+      '''
     }
     changed {
         echo "${ok} Things were different before..."
