@@ -20,7 +20,6 @@ pipeline {
     choice(
         name: 'YN',
         choices:"Yes\nNo",
-        defaultValue:"Yes",
         description: "Destroy the VM? ")
   }
 
