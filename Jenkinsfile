@@ -126,7 +126,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
                 eho -e ''$_{1..72}'\b-'
-                SNO=0
+                SNO=10
                 FNO=0
 
                 sh test/create.sh | tee ${tmpfile}
