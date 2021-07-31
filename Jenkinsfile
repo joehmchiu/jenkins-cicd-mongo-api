@@ -93,6 +93,7 @@ pipeline {
             sh test/delete.sh | tee ${tmpfile}
             echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
           '''
+          currentBuild.result = 'SUCCESS'
         }
       }
     }
@@ -154,6 +155,7 @@ pipeline {
 
             done
           '''
+          currentBuild.result = 'SUCCESS'
         }
       }
     }
