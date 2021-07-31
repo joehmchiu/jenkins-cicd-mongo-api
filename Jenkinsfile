@@ -175,14 +175,8 @@ pipeline {
   }
   post {
     always {
-      script {
-        try {
-          junit allowEmptyResults: true, testResults: '**/reports/*.xml'
-          echo "${ok} Junit Results"
-        } catch (Exception e) {
-          echo "${nok} Cannot generate results - " + e.toString()
-        }
-      }
+      echo "${ok} Junit Results"
+      junit allowEmptyResults: true, testResults: '**/reports/*.xml'
     }
     success {
       echo "${ok} Tag for release ready"
