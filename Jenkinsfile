@@ -23,11 +23,11 @@ pipeline {
         description: "Destroy the VM? ")
     choice(
         name: 'SRate',
-        choices:"10\n20\n30\n40\n50\n60",
+        choices:"10\n20\n30\n40\n50\n60\n70\n80\n90\n100",
         description: "Success Rate(%)")
     choice(
         name: 'FRate',
-        choices:"10\n20\n30",
+        choices:"0\n10\n20\n30",
         description: "Failure Rate(%)")
   }
 
@@ -134,8 +134,8 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
                 eho -e ''$_{1..72}'\b-'
-                SNO=${params.SRate}/10
-                FNO=${params.FRate}/10
+                SNO=$((${params.SRate}/10))
+                FNO=$((${params.FRate}/10))
 
                 sh test/create.sh | tee ${tmpfile}
                 if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
