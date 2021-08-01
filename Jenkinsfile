@@ -133,7 +133,7 @@ pipeline {
               do
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
-                eho -e ''$_{1..72}'\b-'
+                echo -e ''$_{1..72}'\b-'
                 SNO=$((${params.SRate}/10))
                 FNO=$((${params.FRate}/10))
 
