@@ -21,6 +21,14 @@ pipeline {
         name: 'YN',
         choices:"Yes\nNo",
         description: "Destroy the VM? ")
+    choice(
+        name: 'SRate',
+        choices:"10\n20\n30\n40\n50\n60",
+        description: "Success Rate(%)")
+    choice(
+        name: 'FRate',
+        choices:"10\n20\n30",
+        description: "Failure Rate(%)")
   }
 
   stages {
@@ -126,8 +134,8 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
                 eho -e ''$_{1..72}'\b-'
-                SNO=5
-                FNO=0
+                SNO=${params.SRate}/10
+                FNO=${params.FRate}/10
 
                 sh test/create.sh | tee ${tmpfile}
                 if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
