@@ -139,6 +139,7 @@ pipeline {
 
                 sh test/create.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
+                echo "[$RNO,$SNO,$FNO]
                 if [ $RNO -lt $FNO ]; then
                   echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
                 elif [ $RNO -lt $SNO ]; then
@@ -149,6 +150,7 @@ pipeline {
 
                 sh test/read.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
+                echo "[$RNO,$SNO,$FNO]
                 if [ $RNO -lt $FNO ]; then
                   echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
                 elif [ $RNO -lt $SNO ]; then
@@ -159,6 +161,7 @@ pipeline {
 
                 sh test/update.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
+                echo "[$RNO,$SNO,$FNO]
                 if [ $RNO -lt $FNO ]; then
                   echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
                 elif [ $RNO -lt $SNO ]; then
@@ -169,6 +172,7 @@ pipeline {
 
                 sh test/delete.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
+                echo "[$RNO,$SNO,$FNO]
                 if [ $RNO -lt $FNO ]; then
                   echo "{\\"Delete\\":\\"failed\\"}" >> ${testfile}
                 elif [ $RNO -lt $SNO ]; then
