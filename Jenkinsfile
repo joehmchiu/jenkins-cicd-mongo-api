@@ -144,6 +144,22 @@ pipeline {
         script {
           try {
             sh '''#!/bin/bash
+              function test {
+                SNO=$2
+                FNO=$3
+                ACT=$4
+                tmpfile=$5
+                testfile=$6
+                RNO=$(( ( RANDOM % 100 )  + 1 ))
+                echo "[$RNO,$SNO,$FNO]
+                if [ $RNO -lt $FNO ]; then
+                  echo "{\\"${ACT}\\":\\"failed\\"}" >> ${testfile}
+                elif [ $RNO -lt $SNO ]; then
+                  echo "{\\"${ACT}\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+                else
+                  echo "{\\"${ACT}\\":\\"skip\\"}" >> ${testfile}
+                fi
+              }
               rm -f ${testfile}
               for i in `seq 1 ${TC}`
               do
@@ -152,9 +168,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
 
                 sh test/create.sh | tee ${tmpfile}
-                script {
-                  test($RNO, $SNO, $FNO, "Create", ${tmpfile}, ${testfile})
-                }
+                test($SNO, $FNO, 'Create", "${tmpfile}", "${testfile}")
 
                 sh test/read.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
