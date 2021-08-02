@@ -1,3 +1,17 @@
+def test(int RNO, int SNO, int FNO, String ACT, String tmpfile, String testfile) {
+  sh '''#!/bin/bash
+    RNO=$(( ( RANDOM % 100 )  + 1 ))
+    echo "[$RNO,$SNO,$FNO]
+    if [ $RNO -lt $FNO ]; then
+      echo "{\\"${ACT}\\":\\"failed\\"}" >> ${testfile}
+    elif [ $RNO -lt $SNO ]; then
+      echo "{\\"${ACT}\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
+    else
+      echo "{\\"${ACT}\\":\\"skip\\"}" >> ${testfile}
+    fi
+  '''
+}
+
 pipeline {
   agent any
   options {
@@ -138,15 +152,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
 
                 sh test/create.sh | tee ${tmpfile}
-                RNO=$(( ( RANDOM % 100 )  + 1 ))
-                echo "[$RNO,$SNO,$FNO]
-                if [ $RNO -lt $FNO ]; then
-                  echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
-                elif [ $RNO -lt $SNO ]; then
-                  echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-                else
-                  echo "{\\"Create\\":\\"skip\\"}" >> ${testfile}
-                fi
+                test($RNO, $SNO, $FNO, 'Create', ${tmpfile}, ${testfile})
 
                 sh test/read.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
