@@ -128,7 +128,6 @@ pipeline {
     stage('API Load Testing') {
       steps {
         script {
-          try {
             sh '''#!/bin/bash
               function test {
                 SNO=$1
@@ -192,9 +191,6 @@ pipeline {
 
               done
             '''
-          } catch (Exception e) {
-            echo "${ok} Validation failure found, it's OK"
-          }
         }
       }
     }
