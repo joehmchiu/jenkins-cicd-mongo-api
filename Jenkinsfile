@@ -131,11 +131,11 @@ pipeline {
           try {
             sh '''#!/bin/bash
               function test {
-                SNO=$2
-                FNO=$3
-                ACT=$4
-                tmpfile=$5
-                testfile=$6
+                SNO=$1
+                FNO=$2
+                ACT=$3
+                tmpfile=$4
+                testfile=$5
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
                 echo "[$RNO,$SNO,$FNO]
                 if [ $RNO -lt $FNO ]; then
