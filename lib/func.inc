@@ -15,5 +15,3 @@ function test {
     echo "{\\"$ACT\\":\\"skip\\"}" >> $testfile
   fi
 }
-
-# test $SNO $FNO 'Create' "${tmpfile}" "${testfile}"
