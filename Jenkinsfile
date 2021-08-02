@@ -1,16 +1,4 @@
 pipeline {
-  environment {
-    // create a backup workspace
-    WS = '/opt/projects/mongo-api'
-    TC = 50
-    crudxml = "reports/crud-test.xml"
-    loadxml = "reports/load-test.xml"
-    tmpfile = '/tmp/test-tmp-file'
-    testfile = '/tmp/test-results'
-    ok = '\u2705'
-    nok = '\u274C'
-  }
-
   agent any
   options {
       timeout(time: 1, unit: 'HOURS') 
@@ -22,13 +10,27 @@ pipeline {
         choices:"Yes\nNo",
         description: "Destroy the VM? ")
     choice(
-        name: 'SRate',
+        name: 'SuccessRate',
         choices:"10\n20\n30\n40\n50\n60\n70\n80\n90\n100",
         description: "Success Rate(%)")
     choice(
-        name: 'FRate',
+        name: 'FailureRate',
         choices:"0\n10\n20\n30",
         description: "Failure Rate(%)")
+  }
+
+  environment {
+    // create a backup workspace
+    WS = '/opt/projects/mongo-api'
+    TC = 50
+    crudxml = "reports/crud-test.xml"
+    loadxml = "reports/load-test.xml"
+    tmpfile = '/tmp/test-tmp-file'
+    testfile = '/tmp/test-results'
+    SNO=${params.SuccessRate}
+    FNO=${params.FailureRate}
+    ok = '\u2705'
+    nok = '\u274C'
   }
 
   stages {
@@ -134,40 +136,42 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
                 echo "Test # $i"
                 echo -e ''$_{1..72}'\b-'
-                SNO=$((${params.SRate}/10))
-                FNO=$((${params.FRate}/10))
 
                 sh test/create.sh | tee ${tmpfile}
-                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                RNO=$(( ( RANDOM % 100 )  + 1 ))
+                if [ $RNO -lt $FNO ]; then
                   echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
-                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                elif [ $RNO -lt $SNO ]; then
                   echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
                 else
                   echo "{\\"Create\\":\\"skip\\"}" >> ${testfile}
                 fi
 
                 sh test/read.sh | tee ${tmpfile}
-                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                RNO=$(( ( RANDOM % 100 )  + 1 ))
+                if [ $RNO -lt $FNO ]; then
                   echo "{\\"Read\\":\\"failed\\"}" >> ${testfile}
-                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                elif [ $RNO -lt $SNO ]; then
                   echo "{\\"Read\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
                 else
                   echo "{\\"Read\\":\\"skip\\"}" >> ${testfile}
                 fi
 
                 sh test/update.sh | tee ${tmpfile}
-                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                RNO=$(( ( RANDOM % 100 )  + 1 ))
+                if [ $RNO -lt $FNO ]; then
                   echo "{\\"Update\\":\\"failed\\"}" >> ${testfile}
-                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                elif [ $RNO -lt $SNO ]; then
                   echo "{\\"Update\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
                 else
                   echo "{\\"Update\\":\\"skip\\"}" >> ${testfile}
                 fi
 
                 sh test/delete.sh | tee ${tmpfile}
-                if [ $(( ( RANDOM % 10 )  + 1 )) -lt $FNO ]; then
+                RNO=$(( ( RANDOM % 100 )  + 1 ))
+                if [ $RNO -lt $FNO ]; then
                   echo "{\\"Delete\\":\\"failed\\"}" >> ${testfile}
-                elif [ $(( ( RANDOM % 10 )  + 1 )) -lt $SNO ]; then
+                elif [ $RNO -lt $SNO ]; then
                   echo "{\\"Delete\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
                 else
                   echo "{\\"Delete\\":\\"skip\\"}" >> ${testfile}
