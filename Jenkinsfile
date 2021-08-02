@@ -128,7 +128,6 @@ pipeline {
     stage('API Load Testing') {
       steps {
         script {
-          try {
             sh '''#!/bin/bash
               function test {
                 SNO=$1
@@ -192,10 +191,62 @@ pipeline {
 
               done
             '''
-          } catch (Exception e) {
-            echo "${ok} Validation failure found, it's OK"
-          }
         }
       }
     }
+    stage('Load Test Report') {
+      steps {
+        catchError {
+          sh "pytest -v -p no:warnings test --junitxml=${loadxml}"
+        }
+      }
+    }
+    stage('Clean Up') {
+      steps {
+        sh '''#!/bin/bash
+          echo "11. Clean up artifects"
+          cd ${WS}
+          echo "${ok} 12. Done!"
+        '''
+      }
+    }
+  }
+  post {
+    always {
+      echo "${ok} Junit Results"
+      junit allowEmptyResults: true, testResults: '**/reports/*.xml', skipPublishingChecks: true
+      script {
+        if ("${params.YN}" == "Yes") {
+          echo "${ok} Destroy VM, test only"
+          sh '''#!/bin/bash
+            if [ -e "${WS}/main.tf" ]; then
+              cd ${WS}
+              sudo pwd
+              sudo ls -lRthr
+              sudo terraform init
+              sudo terraform destroy -auto-approve
+            fi
+          '''
+        }
+      }
+    }
+    success {
+      echo "${ok} Tag for release ready"
+      sh '''#!/bin/bash
+        sudo ansible-playbook -T 120 uat-release.yml
+        sudo rm -f ./group_vars/all/vault
+        echo "10. Release tagged!"
+      '''
+      echo "${ok} Close the change request if opened"
+    }
+    unstable {
+        echo "${ok} ${nok} Unstable status occurs..."
+    }
+    failure {
+      echo "${nok} Failures found"
+    }
+    changed {
+        echo "${ok} Things were different before..."
+    }
+  }
 }
