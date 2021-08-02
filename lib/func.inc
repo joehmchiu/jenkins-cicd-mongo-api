@@ -8,10 +8,10 @@ function test {
   RNO=$(( ( RANDOM % 100 )  + 1 ))
   echo "[$RNO,$SNO,$FNO]
   if [ $RNO -lt $FNO ]; then
-    echo "{\\"$ACT\\":\\"failed\\"}" >> $testfile
+    echo "{\"$ACT\":\"failed\"}" >> $testfile
   elif [ $RNO -lt $SNO ]; then
-    echo "{\\"$ACT\\":$(cat $tmpfile | jq '.status')}" >> $testfile
+    echo "{\"$ACT\":$(cat $tmpfile | jq '.status')}" >> $testfile
   else
-    echo "{\\"$ACT\\":\\"skip\\"}" >> $testfile
+    echo "{\"$ACT\":\"skip\"}" >> $testfile
   fi
 }
