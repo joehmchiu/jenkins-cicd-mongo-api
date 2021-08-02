@@ -27,9 +27,9 @@ pipeline {
     loadxml = "reports/load-test.xml"
     tmpfile = '/tmp/test-tmp-file'
     testfile = '/tmp/test-results'
-    SNO=${params.SuccessRate}
-    FNO=${params.FailureRate}
-    ok = '\u2705'
+    SNO ="${params.SuccessRate}"
+    FNO ="${params.FailureRate}"
+    ok  = '\u2705'
     nok = '\u274C'
   }
 
