@@ -11,7 +11,7 @@ pipeline {
         description: "Destroy the VM? ")
     choice(
         name: 'SuccessRate',
-        choices:"10\n20\n30\n40\n50\n60\n70\n80\n90\n100",
+        choices:"50\n10\n20\n30\n40\n50\n60\n70\n80\n90\n100",
         description: "Success Rate(%)")
     choice(
         name: 'FailureRate',
@@ -130,6 +130,7 @@ pipeline {
         script {
           try {
             sh '''#!/bin/bash
+              . lib/func.inc
               rm -f ${testfile}
               for i in `seq 1 ${TC}`
               do
@@ -138,15 +139,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
 
                 sh test/create.sh | tee ${tmpfile}
-                RNO=$(( ( RANDOM % 100 )  + 1 ))
-                echo "[$RNO,$SNO,$FNO]
-                if [ $RNO -lt $FNO ]; then
-                  echo "{\\"Create\\":\\"failed\\"}" >> ${testfile}
-                elif [ $RNO -lt $SNO ]; then
-                  echo "{\\"Create\\":$(cat ${tmpfile} | jq '.status')}" >> ${testfile}
-                else
-                  echo "{\\"Create\\":\\"skip\\"}" >> ${testfile}
-                fi
+                test $SNO $FNO "Create" "${tmpfile}" "${testfile}"
 
                 sh test/read.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
