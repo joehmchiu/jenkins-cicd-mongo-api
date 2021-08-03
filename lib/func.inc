@@ -1,5 +1,5 @@
 
-function test {
+function validate {
   SNO=$1
   FNO=$2
   ACT=$3
