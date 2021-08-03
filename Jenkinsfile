@@ -139,7 +139,7 @@ pipeline {
                 echo -e ''$_{1..72}'\b-'
 
                 sh test/create.sh | tee ${tmpfile}
-                validate $SNO $FNO 'Create' ${tmpfile} ${testfile}
+                # validate $SNO $FNO 'Create' ${tmpfile} ${testfile}
 
                 sh test/read.sh | tee ${tmpfile}
                 RNO=$(( ( RANDOM % 100 )  + 1 ))
