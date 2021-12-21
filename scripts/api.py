@@ -175,7 +175,7 @@ def delete(id):
         output = { 'error': str(e) }
 
     tab.delete_one({'_id' : ObjectId(id)})
-    output = { 'result' : "%s deleted" % id }
+    output = { 'id': id, 'status': "deleted" }
 
     t2 = time.time()
     output = fill(output, t1, t2)
